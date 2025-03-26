@@ -15,6 +15,7 @@ export const seedInitialProducts = async ()=>{
         const products = [
             {title: "Product 1", image: "Product-1-image", price: 10.99, stock: 100},
         ];
+        await productModel.create(products);
     }
     catch (error) {
         console.error(error);
