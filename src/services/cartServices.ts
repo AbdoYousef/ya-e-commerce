@@ -1,4 +1,5 @@
 import { cartModel, ICart } from "../models/cartModel";
+import { IOrderItem, orderModel } from "../models/oderModel";
 import productModel from "../models/productModel";
 
 interface CreateCartForUser {
@@ -184,6 +185,53 @@ export const clearCart = async ({userId}: ClearCart) => {
         cart.totalAmount = 0;
         const updateCart = await cart.save();
         return { data: updateCart, statusCode: 200 };
+    }
+    catch(err){
+        console.error(err);
+        return { data: "Internal Server Error", statusCode: 500 };
+    }
+}
+
+interface Checkout {
+    userId: string;
+    address: string;
+}
+
+export const checkout = async ({userId, address}: Checkout) => {
+    try{
+        if(!address){
+            return { data: "Address is required", statusCode: 400 };
+        }
+        const cart = await getActiveCartForUser({userId});
+        if ("statusCode" in cart) {
+            return cart; 
+        }
+        const orderItems: IOrderItem[] = [];
+        for(const item of cart.items){
+            const product = await productModel.findById(item.product);
+            if(!product){
+                return { data: "Product not found", statusCode: 404 };
+            }
+            const orderItem: IOrderItem = {
+                productTitle: product.title,
+                productImage: product.image,
+                unitPrice: item.unitPrice,
+                quantity: item.quantity
+            };
+            orderItems.push(orderItem);
+        }
+        const order = await orderModel.create({
+            orderItems,
+            total: cart.totalAmount,
+            userId,
+            address
+        });
+        await order.save();
+        
+        // Update cart status to be completed
+        cart.status = "completed";
+        await cart.save();
+        return { data: order, statusCode: 201 };
     }
     catch(err){
         console.error(err);

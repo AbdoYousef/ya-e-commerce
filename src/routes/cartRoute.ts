@@ -1,5 +1,5 @@
 import express from 'express';
-import { addItemToCart, clearCart, deleteItemInCart, getActiveCartForUser, updateItemInCart } from '../services/cartServices';
+import { addItemToCart, checkout, clearCart, deleteItemInCart, getActiveCartForUser, updateItemInCart } from '../services/cartServices';
 import  validateJWT  from '../middlewares/validateJWT';
 import { ExtendedRequest } from '../types/extendedRequest'
 
@@ -78,6 +78,19 @@ router.delete('/items/:productId', validateJWT, async (req: ExtendedRequest, res
         res.status(response.statusCode).send(response.data);
     }
     catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+})
+
+router.post('checkout', validateJWT, async(req: ExtendedRequest, res)=>{
+    try{
+        const userId = req?.user?._id;
+        const {address} = req.body;
+        const response = await checkout({userId, address});
+        res.status(response.statusCode).send(response.data);
+    }
+    catch(error){
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
