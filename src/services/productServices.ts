@@ -13,9 +13,13 @@ export const getAllProducts = async ()=>{
 export const seedInitialProducts = async ()=>{
     try {
         const products = [
-            {title: "Product 1", image: "Product-1-image", price: 10.99, stock: 100},
+            {title: "Dell Laptop", image: "Product-1-image", price: 1000, stock: 100},
         ];
-        await productModel.create(products);
+        // await productModel.create(products);
+        const existingProducts = await getAllProducts();
+        if(existingProducts.length === 0){
+            await productModel.insertMany(products);
+        }
     }
     catch (error) {
         console.error(error);
