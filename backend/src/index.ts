@@ -13,7 +13,7 @@ const port = 3001;
 
 app.use(express.json());
 
-mongoose.connect("process.env.DATABASE_URL")
+mongoose.connect(process.env.DATABASE_URL || '')
 .then(() => console.log("connected to ecommerce db!"))
 .catch((err) => console.log(`Error connecting to ecommerce db: ${err}`));
 
