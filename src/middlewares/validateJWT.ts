@@ -20,7 +20,7 @@ const validateJWT = async(
                 res.status(403).send("Invalid token");
                 return;
             }
-            jwt.verify(token, "eCY970YY5XxByAryYXrgi9qcq4JT8xf9", async (err: any, payload: any)=>{
+            jwt.verify(token, process.env.JWT_SECRET || '', async (err: any, payload: any)=>{
                 if(err){
                     res.status(403).send("Invalid token");
                     return;

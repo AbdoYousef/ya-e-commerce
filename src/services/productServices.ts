@@ -23,6 +23,6 @@ export const seedInitialProducts = async ()=>{
     }
     catch (error) {
         console.error(error);
-        throw new Error("Error seeding initial products");
+        // throw new Error("Error seeding initial products");
     }
 }
