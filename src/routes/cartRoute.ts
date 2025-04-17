@@ -83,7 +83,7 @@ router.delete('/items/:productId', validateJWT, async (req: ExtendedRequest, res
     }
 })
 
-router.post('checkout', validateJWT, async(req: ExtendedRequest, res)=>{
+router.post('/checkout', validateJWT, async(req: ExtendedRequest, res)=>{
     try{
         const userId = req?.user?._id;
         const {address} = req.body;
