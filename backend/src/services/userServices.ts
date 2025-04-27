@@ -2,7 +2,7 @@ import { userModel } from "../models/userModel";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-interface RigesterParams {
+interface RegisterParams {
     firstName: string;
     lastName: string;
     email: string;
@@ -10,7 +10,7 @@ interface RigesterParams {
 }
 
 
-export const register = async({firstName, lastName, email, password}: RigesterParams)=>{
+export const register = async({firstName, lastName, email, password}: RegisterParams)=>{
     try{
         const findUser = await userModel.findOne({email})
         if(findUser){
